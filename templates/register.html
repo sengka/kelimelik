@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kayıt Ol</title>
+</head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #FAF9F6;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #333;
+  position: relative; /* Added to serve as a reference for absolute positioning */
+}
+
+form {
+  background-color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 400px;
+  position: relative; /* Ensure form is positioned relatively */
+}
+
+.page-title {
+  text-align: center;
+  color: #22223B;
+  margin-bottom: 1.5rem;
+  font-size: 3.95rem;
+  font-weight: 600;
+  position: absolute; /* Position absolutely */
+  top: 40px; /* Adjust this value to move it up or down as needed */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  width: 110%; /* Ensure it spans the container width */
+  z-index: 1; /* Ensure it stays above other elements */
+}
+
+label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #444;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #C9ADA7;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #C9ADA7;
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #b08984;
+}
+
+.action-group {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.action-group p {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.action-group a {
+  color: #9A8C98;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.action-group a:hover {
+  text-decoration: underline;
+}
+
+</style>
+<body>
+    <h1 class="page-title">Kayıt Ol</h1> 
+
+    <form method="POST" action="/register">
+        <label for="email">E-posta:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Şifre:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <div class="action-group">
+            <button type="submit">Kayıt Ol</button>
+            <p>Zaten hesabınız var mı? <a href="/login">buradan giriş yapın</a>.</p>
+        </div>
+    </form>
+</body>
+</html>
