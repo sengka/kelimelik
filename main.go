@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -13,19 +14,30 @@ func main() {
 	db := initDB()
 	defer db.Close()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "templates/homepage.html")
-	})
+	r := mux.NewRouter()
 
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	// Anasayfa
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "templates/homepage.html")
+	}).Methods("GET")
+
+	// Register sayfası
+	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		handlers.RegisterHandler(w, r, db)
 	})
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+
+	// Login sayfası
+	r.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LoginHandler(w, r, db)
 	})
 
+	// Giriş sonrası anasayfa
+	r.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
+		handlers.MainPageHandler(w, r)
+	})
+
 	log.Println("Server çalışıyor : http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func initDB() *sql.DB {
