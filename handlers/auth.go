@@ -131,7 +131,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			Path:  "/",
 		})
 
-		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		http.Redirect(w, r, "/mainpage", http.StatusSeeOther)
 		return
 	}
 
