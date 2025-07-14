@@ -39,7 +39,7 @@ func main() {
 	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
 		handlers.NewPostHandler(w, r, db)
 	})
-	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LogoutHandler(w, r, db)
 	})
 
