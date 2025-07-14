@@ -137,3 +137,29 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	tmpl.Execute(w, nil)
 }
+func LogoutHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+	// Cookie'den session token'ı al
+	cookie, err := r.Cookie("session_token")
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	// Session token veritabanından sil
+	_, err = db.Exec("DELETE FROM sessions WHERE session_token = ?", cookie.Value)
+	if err != nil {
+		http.Error(w, "Oturum silinemedi", http.StatusInternalServerError)
+		return
+	}
+
+	// Cookie'yi tarayıcıdan sil
+	http.SetCookie(w, &http.Cookie{
+		Name:   "session_token",
+		Value:  "",
+		Path:   "/",
+		MaxAge: -1, // tarayıcıdan silmek için
+	})
+
+	// Ana sayfaya veya giriş sayfasına yönlendir
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

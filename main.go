@@ -36,6 +36,13 @@ func main() {
 		handlers.MainPageHandler(w, r)
 	})
 
+	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
+		handlers.NewPostHandler(w, r, db)
+	})
+	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		handlers.LogoutHandler(w, r, db)
+	})
+
 	log.Println("Server çalışıyor : http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
@@ -61,6 +68,15 @@ func initDB() *sql.DB {
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	);`
 
+	postTable := `
+	CREATE TABLE IF NOT EXISTS posts (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT NOT NULL,
+	content TEXT NOT NULL,
+	user_id INTEGER,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY(user_id) REFERENCES users(id)
+);`
 	_, err = db.Exec(userTable)
 	if err != nil {
 		log.Fatal(err)
@@ -70,5 +86,9 @@ func initDB() *sql.DB {
 		log.Fatal(err)
 	}
 
+	_, err = db.Exec(postTable)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return db
 }
