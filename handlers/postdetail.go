@@ -5,10 +5,13 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	idStr := r.URL.Path[len("/post/"):]
+	vars := mux.Vars(r)
+	idStr := vars["id"]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Geçersiz ID", http.StatusBadRequest)
@@ -22,7 +25,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles("templates/post_detail.html")
+	tmpl, err := template.ParseFiles("templates/postdetail.html")
 	if err != nil {
 		http.Error(w, "Şablon yüklenemedi", http.StatusInternalServerError)
 		return

@@ -36,10 +36,9 @@ func main() {
 		handlers.MainPageHandler(w, r, db)
 	}).Methods("GET")
 
-	// Post detay sayfası
 	r.HandleFunc("/post/{id}", func(w http.ResponseWriter, r *http.Request) {
 		handlers.PostDetailHandler(w, r, db)
-	}).Methods("GET")
+	})
 
 	// Yeni post ekleme
 	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
