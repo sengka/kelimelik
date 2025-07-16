@@ -22,13 +22,7 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 
-		// Kullanıcı kimliğini oturumdan al (örnek: session veya context kullanımı)
-		userIDInterface := r.Context().Value("userID")
-		userID, ok := userIDInterface.(int)
-		if !ok {
-			http.Error(w, "Kullanıcı kimliği bulunamadı", http.StatusUnauthorized)
-			return
-		}
+		userID := 1
 
 		_, err := db.Exec("INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)", title, content, userID)
 		if err != nil {
@@ -38,4 +32,5 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		http.Redirect(w, r, "/main", http.StatusSeeOther)
 	}
+
 }

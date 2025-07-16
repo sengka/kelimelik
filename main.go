@@ -24,29 +24,32 @@ func main() {
 	// Register sayfası
 	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		handlers.RegisterHandler(w, r, db)
-	})
+	}).Methods("GET", "POST")
 
 	// Login sayfası
 	r.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LoginHandler(w, r, db)
-	})
+	}).Methods("GET", "POST")
 
-	http.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
+	// Anasayfa / Main
+	r.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
 		handlers.MainPageHandler(w, r, db)
-	})
+	}).Methods("GET")
 
-	http.HandleFunc("/post/", func(w http.ResponseWriter, r *http.Request) {
+	// Post detay sayfası
+	r.HandleFunc("/post/{id}", func(w http.ResponseWriter, r *http.Request) {
 		handlers.PostDetailHandler(w, r, db)
-	})
+	}).Methods("GET")
 
-	//Yeni post ekleme sayfası
+	// Yeni post ekleme
 	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
 		handlers.NewPostHandler(w, r, db)
-	})
-	// Çıkış sayfası
+	}).Methods("GET", "POST")
+
+	// Çıkış
 	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LogoutHandler(w, r, db)
-	})
+	}).Methods("GET")
 
 	log.Println("Server çalışıyor : http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
