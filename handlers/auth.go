@@ -4,7 +4,8 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
-	"errors"
+
+	// "errors"
 	"html/template"
 	"net/http"
 	"strings"
@@ -33,24 +34,24 @@ func generateSessionToken() (string, error) {
 	return hex.EncodeToString(b), nil
 }
 
-// Kullanıcıdan gelen session_token çerezine göre kullanıcı id çek
-func getUserIDFromSession(r *http.Request, db *sql.DB) (int, error) {
-	cookie, err := r.Cookie("session_token")
-	if err != nil {
-		return 0, errors.New("session yok")
-	}
+// // Kullanıcıdan gelen session_token çerezine göre kullanıcı id çek
+// func getUserIDFromSession(r *http.Request, db *sql.DB) (int, error) {
+// 	cookie, err := r.Cookie("session_token")
+// 	if err != nil {
+// 		return 0, errors.New("session yok")
+// 	}
 
-	var userID int
-	err = db.QueryRow("SELECT user_id FROM sessions WHERE session_token = ?", cookie.Value).Scan(&userID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return 0, errors.New("geçersiz session token")
-		}
-		return 0, err
-	}
+// 	var userID int
+// 	err = db.QueryRow("SELECT user_id FROM sessions WHERE session_token = ?", cookie.Value).Scan(&userID)
+// 	if err != nil {
+// 		if err == sql.ErrNoRows {
+// 			return 0, errors.New("geçersiz session token")
+// 		}
+// 		return 0, err
+// 	}
 
-	return userID, nil
-}
+// 	return userID, nil
+// }
 
 // Register işlemi
 func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {

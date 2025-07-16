@@ -31,14 +31,19 @@ func main() {
 		handlers.LoginHandler(w, r, db)
 	})
 
-	// Giriş sonrası anasayfa
-	r.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
-		handlers.MainPageHandler(w, r)
+	http.HandleFunc("/main", func(w http.ResponseWriter, r *http.Request) {
+		handlers.MainPageHandler(w, r, db)
 	})
 
+	http.HandleFunc("/post/", func(w http.ResponseWriter, r *http.Request) {
+		handlers.PostDetailHandler(w, r, db)
+	})
+
+	//Yeni post ekleme sayfası
 	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
 		handlers.NewPostHandler(w, r, db)
 	})
+	// Çıkış sayfası
 	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LogoutHandler(w, r, db)
 	})
