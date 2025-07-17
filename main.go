@@ -36,6 +36,7 @@ func main() {
 		handlers.MainPageHandler(w, r, db)
 	}).Methods("GET")
 
+	//Metin detayları
 	r.HandleFunc("/post/{id}", func(w http.ResponseWriter, r *http.Request) {
 		handlers.PostDetailHandler(w, r, db)
 	})
@@ -43,6 +44,16 @@ func main() {
 	// Yeni post ekleme
 	r.HandleFunc("/newpost", func(w http.ResponseWriter, r *http.Request) {
 		handlers.NewPostHandler(w, r, db)
+	}).Methods("GET", "POST")
+
+	// Şifre sıfırlama maili
+	r.HandleFunc("/smtp", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ResetPasswordHandler(w, r, db)
+	}).Methods("GET", "POST")
+
+	//Yeni şifre oluşturma
+	r.HandleFunc("/new-password", func(w http.ResponseWriter, r *http.Request) {
+		handlers.NewPasswordHandler(w, r, db)
 	}).Methods("GET", "POST")
 
 	// Çıkış
@@ -63,6 +74,8 @@ func initDB() *sql.DB {
 	userTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		lastname TEXT NOT NULL,
 		email TEXT UNIQUE NOT NULL,
 		password TEXT NOT NULL
 	);`
@@ -83,7 +96,15 @@ func initDB() *sql.DB {
 	user_id INTEGER,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY(user_id) REFERENCES users(id)
-);`
+	);`
+
+	passwordResetTable := `
+	CREATE TABLE IF NOT EXISTS password_resets (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		email TEXT NOT NULL,
+		token TEXT NOT NULL,
+		expires_at DATETIME NOT NULL
+	);`
 	_, err = db.Exec(userTable)
 	if err != nil {
 		log.Fatal(err)
@@ -97,5 +118,10 @@ func initDB() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+	_, err = db.Exec(passwordResetTable)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return db
 }

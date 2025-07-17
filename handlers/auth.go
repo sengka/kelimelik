@@ -4,9 +4,9 @@ import (
 	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
-
-	// "errors"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 
@@ -34,29 +34,12 @@ func generateSessionToken() (string, error) {
 	return hex.EncodeToString(b), nil
 }
 
-// // Kullanıcıdan gelen session_token çerezine göre kullanıcı id çek
-// func getUserIDFromSession(r *http.Request, db *sql.DB) (int, error) {
-// 	cookie, err := r.Cookie("session_token")
-// 	if err != nil {
-// 		return 0, errors.New("session yok")
-// 	}
-
-// 	var userID int
-// 	err = db.QueryRow("SELECT user_id FROM sessions WHERE session_token = ?", cookie.Value).Scan(&userID)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			return 0, errors.New("geçersiz session token")
-// 		}
-// 		return 0, err
-// 	}
-
-// 	return userID, nil
-// }
-
-// Register işlemi
+// Kayıt işlemi
 func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method == http.MethodPost {
-		email := r.FormValue("email")
+		name := r.FormValue("name")
+		lastname := r.FormValue("lastname")
+		email := strings.TrimSpace(strings.ToLower(r.FormValue("email")))
 		password := r.FormValue("password")
 
 		if len(password) < 8 || !containsSpecialChar(password) {
@@ -66,12 +49,15 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
-			http.Error(w, "Şifre işlenemedi", http.StatusInternalServerError)
+			log.Println("Kayıt hatası:", err) // sunucu loguna tam hata yaz
+			http.Error(w, fmt.Sprintf("Kayıt başarısız: %v", err), http.StatusInternalServerError)
 			return
 		}
 
-		_, err = db.Exec("INSERT INTO users (email, password) VALUES (?, ?)", email, hashedPassword)
+		_, err = db.Exec("INSERT INTO users (name, lastname, email, password) VALUES (?, ?, ?, ?)",
+			name, lastname, email, hashedPassword)
 		if err != nil {
+			log.Println("Kayıt hatası:", err)
 			http.Error(w, "Kayıt başarısız, email zaten kullanılıyor olabilir.", http.StatusInternalServerError)
 			return
 		}
@@ -88,7 +74,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tmpl.Execute(w, nil)
 }
 
-// Login işlemi
+// Giriş işlemi
 func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tmpl, err := template.ParseFiles("templates/login.html")
 	if err != nil {
@@ -97,13 +83,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	if r.Method == http.MethodPost {
-		email := r.FormValue("email")
+		email := strings.TrimSpace(strings.ToLower(r.FormValue("email")))
 		password := r.FormValue("password")
 
 		var userID int
 		var hashedPassword string
 		err := db.QueryRow("SELECT id, password FROM users WHERE email = ?", email).Scan(&userID, &hashedPassword)
 		if err != nil {
+			log.Println("Kullanıcı bulunamadı:", err)
 			http.Error(w, "Kullanıcı bulunamadı.", http.StatusUnauthorized)
 			return
 		}
@@ -138,29 +125,27 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	tmpl.Execute(w, nil)
 }
+
+// Logout işlemi
 func LogoutHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	// Cookie'den session token'ı al
 	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	// Session token veritabanından sil
 	_, err = db.Exec("DELETE FROM sessions WHERE session_token = ?", cookie.Value)
 	if err != nil {
 		http.Error(w, "Oturum silinemedi", http.StatusInternalServerError)
 		return
 	}
 
-	// Cookie'yi tarayıcıdan sil
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session_token",
 		Value:  "",
 		Path:   "/",
-		MaxAge: -1, // tarayıcıdan silmek için
+		MaxAge: -1,
 	})
 
-	// Ana sayfaya veya giriş sayfasına yönlendir
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
