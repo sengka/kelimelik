@@ -1,17 +1,20 @@
 package handlers
 
 import (
-	"crypto/rand"
+	// "crypto/rand"
 	"database/sql"
-	"encoding/hex"
+	// "encoding/hex"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"strings"
 
+	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var store = sessions.NewCookieStore([]byte("your-very-secret-key"))
 
 // Şifre içerisinde özel karakter var mı kontrolü
 func containsSpecialChar(s string) bool {
@@ -24,15 +27,15 @@ func containsSpecialChar(s string) bool {
 	return false
 }
 
-// Rastgele session token üret
-func generateSessionToken() (string, error) {
-	b := make([]byte, 16) // 128 bit
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
-}
+// // Rastgele session token üret (İstersen, artık kullanmana gerek kalmaz)
+// func generateSessionToken() (string, error) {
+// 	b := make([]byte, 16) // 128 bit
+// 	_, err := rand.Read(b)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return hex.EncodeToString(b), nil
+// }
 
 // Kayıt işlemi
 func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
@@ -49,7 +52,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
-			log.Println("Kayıt hatası:", err) // sunucu loguna tam hata yaz
+			log.Println("Kayıt hatası:", err)
 			http.Error(w, fmt.Sprintf("Kayıt başarısız: %v", err), http.StatusInternalServerError)
 			return
 		}
@@ -74,7 +77,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tmpl.Execute(w, nil)
 }
 
-// Giriş işlemi
+// Giriş işlemi (gorilla/sessions ile)
 func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tmpl, err := template.ParseFiles("templates/login.html")
 	if err != nil {
@@ -101,23 +104,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			return
 		}
 
-		token, err := generateSessionToken()
+		// Oturum aç
+		session, err := store.Get(r, "session-name")
 		if err != nil {
-			http.Error(w, "Session token oluşturulamadı", http.StatusInternalServerError)
+			http.Error(w, "Oturum alınamadı.", http.StatusInternalServerError)
+			return
+		}
+		session.Values["user_id"] = userID
+
+		err = session.Save(r, w)
+		if err != nil {
+			http.Error(w, "Oturum kaydedilemedi.", http.StatusInternalServerError)
 			return
 		}
 
-		_, err = db.Exec("INSERT INTO sessions (user_id, session_token) VALUES (?, ?)", userID, token)
-		if err != nil {
-			http.Error(w, "Session kaydedilemedi", http.StatusInternalServerError)
-			return
-		}
-
-		http.SetCookie(w, &http.Cookie{
-			Name:  "session_token",
-			Value: token,
-			Path:  "/",
-		})
+		ensureUserProfileExists(db, userID)
 
 		http.Redirect(w, r, "/main", http.StatusSeeOther)
 		return
@@ -126,26 +127,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	tmpl.Execute(w, nil)
 }
 
-// Logout işlemi
+// Logout işlemi (gorilla/sessions ile)
 func LogoutHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	cookie, err := r.Cookie("session_token")
+	session, err := store.Get(r, "session-name")
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
 
-	_, err = db.Exec("DELETE FROM sessions WHERE session_token = ?", cookie.Value)
+	// Oturumu temizle
+	session.Options.MaxAge = -1
+	err = session.Save(r, w)
 	if err != nil {
-		http.Error(w, "Oturum silinemedi", http.StatusInternalServerError)
+		http.Error(w, "Oturum kapatılamadı.", http.StatusInternalServerError)
 		return
 	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:   "session_token",
-		Value:  "",
-		Path:   "/",
-		MaxAge: -1,
-	})
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

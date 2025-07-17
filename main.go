@@ -56,6 +56,14 @@ func main() {
 		handlers.NewPasswordHandler(w, r, db)
 	}).Methods("GET", "POST")
 
+	r.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			handlers.ProfileUpdateHandler(w, r, db)
+		} else {
+			handlers.ProfileHandler(w, r, db)
+		}
+	}).Methods("GET", "POST")
+
 	// Çıkış
 	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
 		handlers.LogoutHandler(w, r, db)
@@ -105,6 +113,16 @@ func initDB() *sql.DB {
 		token TEXT NOT NULL,
 		expires_at DATETIME NOT NULL
 	);`
+	profileTable := `
+	CREATE TABLE IF NOT EXISTS user_profiles (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL UNIQUE,
+		birthdate TEXT,
+		phone TEXT,
+		bio TEXT,
+		FOREIGN KEY(user_id) REFERENCES users(id)
+	);`
+
 	_, err = db.Exec(userTable)
 	if err != nil {
 		log.Fatal(err)
@@ -121,6 +139,11 @@ func initDB() *sql.DB {
 	_, err = db.Exec(passwordResetTable)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	_, err = db.Exec(profileTable)
+	if err != nil {
+		log.Fatalf("Profil tablosu oluşturulurken hata: %v", err)
 	}
 
 	return db

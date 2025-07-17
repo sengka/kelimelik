@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profilim - Kelimelik</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #FAF9F6;
+      margin: 0;
+      padding: 0;
+      color: #3E3E3E;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #22223B;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.8rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #9A8C98;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a:focus,
+    .nav-links li a.active {
+      color: #C9ADA7;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      width: 100%;
+      max-width: 950px;
+    }
+
+    form h1 {
+      text-align: center;
+      color: #22223B;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+
+    .form-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .left-col,
+    .right-col {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #C9ADA7;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      margin-top: 1rem;
+      background-color: #C9ADA7;
+      color: #fff;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #b08984;
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        flex-direction: column;
+      }
+
+      form {
+        padding: 1.5rem;
+      }
+
+      form h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Kelimelik</div>
+    <ul class="nav-links">
+      <li><a href="main">Anasayfa</a></li>
+      <li><a href="newpost">Yeni Yazı Ekle</a></li>
+      <li><a href="profile" class="active">Profil</a></li>
+      <li><a href="logout">Çıkış</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <form method="POST" action="/profile">
+      <h1>Profilim</h1>
+      <div class="form-container">
+        <div class="left-col">
+          <label for="name">İsim</label>
+          <input type="text" id="name" name="name" value="{{.Name}}" required />
+
+          <label for="lastname">Soyisim</label>
+          <input type="text" id="lastname" name="lastname" value="{{.Lastname}}" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="{{.Email}}" readonly />
+
+          <label for="password">Yeni Şifre (isteğe bağlı)</label>
+          <input type="password" id="password" name="password" placeholder="Yeni şifrenizi girin" />
+        </div>
+
+        <div class="right-col">
+          <label for="birthday">Doğum Günü</label>
+          <input type="date" id="birthday" name="birthday" value="{{.Birthday}}" />
+
+          <label for="phone">Telefon</label>
+          <input type="text" id="phone" name="phone" value="{{.Phone}}" />
+
+          <label for="bio">Biografi</label>
+          <input type="text" id="bio" name="bio" value="{{.Address}}" />
+        </div>
+      </div>
+
+      <button type="submit">Güncelle</button>
+    </form>
+  </main>
+
+</body>
+</html>
