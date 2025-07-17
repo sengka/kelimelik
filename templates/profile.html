@@ -19,7 +19,6 @@
       min-height: 100vh;
     }
 
-    /* Navbar */
     .navbar {
       background-color: #fff;
       padding: 1rem 2rem;
@@ -171,28 +170,19 @@
       <h1>Profilim</h1>
       <div class="form-container">
         <div class="left-col">
-          <label for="name">İsim</label>
-          <input type="text" id="name" name="name" value="{{.Name}}" required />
+<input type="text" id="name" name="name" value="{{.Name}}" required placeholder="Adınızı girin" />
 
-          <label for="lastname">Soyisim</label>
-          <input type="text" id="lastname" name="lastname" value="{{.Lastname}}" required />
+<input type="text" id="lastname" name="lastname" value="{{.Lastname}}" required placeholder="Soyadınızı girin" />
 
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" value="{{.Email}}" readonly />
+<input type="email" id="email" name="email" value="{{.Email}}" readonly placeholder="Email adresiniz" />
 
-          <label for="password">Yeni Şifre (isteğe bağlı)</label>
-          <input type="password" id="password" name="password" placeholder="Yeni şifrenizi girin" />
-        </div>
+<input type="date" id="birthday" name="birthday" value="{{.Birthdate.String}}" placeholder="Doğum tarihinizi seçin" />
 
-        <div class="right-col">
-          <label for="birthday">Doğum Günü</label>
-          <input type="date" id="birthday" name="birthday" value="{{.Birthday}}" />
+<input type="text" id="phone" name="phone" value="{{.Phone.String}}" placeholder="Telefon numaranızı girin" />
 
-          <label for="phone">Telefon</label>
-          <input type="text" id="phone" name="phone" value="{{.Phone}}" />
+<input type="text" id="bio" name="bio" value="{{.Bio.String}}" placeholder="Kendiniz hakkında kısa bir bilgi yazın" />
 
-          <label for="bio">Biografi</label>
-          <input type="text" id="bio" name="bio" value="{{.Address}}" />
+
         </div>
       </div>
 

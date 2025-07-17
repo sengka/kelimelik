@@ -70,6 +70,15 @@ func ensureUserProfileExists(db *sql.DB, userID int) {
 	}
 }
 
+type ProfileData struct {
+	Name      string
+	Lastname  string
+	Email     string
+	Birthdate sql.NullString
+	Phone     sql.NullString
+	Bio       sql.NullString
+}
+
 func ProfileHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	session, _ := store.Get(r, "session-name")
 	userID, ok := session.Values["user_id"].(int)
@@ -78,54 +87,28 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// User tablosundaki temel bilgiler
-	var user struct {
-		Name     string
-		Lastname string
-		Email    string
-	}
+	var profile ProfileData
 
-	err := db.QueryRow("SELECT name, lastname, email FROM users WHERE id = ?", userID).Scan(&user.Name, &user.Lastname, &user.Email)
+	err := db.QueryRow("SELECT name, lastname, email FROM users WHERE id = ?", userID).
+		Scan(&profile.Name, &profile.Lastname, &profile.Email)
 	if err != nil {
-		http.Error(w, "Kullanıcı bilgileri alınamadı.", http.StatusInternalServerError)
+		http.Error(w, "Kullanıcı bilgileri alınamadı: "+err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	// Profilden özel bilgiler
-	var profile struct {
-		Birthdate string
-		Phone     string
-		Bio       string
 	}
 
 	err = db.QueryRow("SELECT birthdate, phone, bio FROM user_profiles WHERE user_id = ?", userID).
 		Scan(&profile.Birthdate, &profile.Phone, &profile.Bio)
-
-	if err == sql.ErrNoRows {
-		// Profil kaydı yoksa boş değerlerle devam et
-		profile.Birthdate = ""
-		profile.Phone = ""
-		profile.Bio = ""
-	} else if err != nil {
-		http.Error(w, "Profil bilgileri alınamadı.", http.StatusInternalServerError)
+	if err != nil && err != sql.ErrNoRows {
+		http.Error(w, "Profil bilgileri alınamadı: "+err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	// Şablona gönderilecek veri
-	data := struct {
-		User    interface{}
-		Profile interface{}
-	}{
-		User:    user,
-		Profile: profile,
 	}
 
 	tmpl, err := template.ParseFiles("templates/profile.html")
 	if err != nil {
-		http.Error(w, "Şablon yüklenemedi.", http.StatusInternalServerError)
+		http.Error(w, "Şablon yüklenemedi: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	tmpl.Execute(w, data)
+	tmpl.Execute(w, profile)
 }
 
 func ProfileUpdateHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
