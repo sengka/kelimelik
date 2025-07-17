@@ -1,135 +1,358 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kelimelik</title>
   <style>
-/* Google Fonts bağlantısı HEAD kısmına eklenmeli */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #FAF9F6; /* Soft fildişi tonu */
-  margin: 0;
-  padding: 2rem;
-  color: #3E3E3E; /* Koyu gri, göz yormayan metin */
-}
+    :root {
+      --primary-start: #c9ada7;
+      --primary-end: #b08984;
+      --secondary: #9a8c98;
+      --text-dark: #22223b;
+      --text-light: #3e3e3e;
+      --bg-light: #faf9f6;
+      --footer-bg: #1f1b2e;
+      --footer-text: #ccc;
+      --footer-link-hover: #c9ada7;
+    }
 
-.container {
-  max-width: 800px;
-  margin: auto;
-  background-color: #FFFFFF; /* Temiz beyaz kutu */
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      margin: 0;
+      padding: 0;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
 
-h1 {
-  font-size: 2rem;
-  color: #22223B; /* Koyu morumsu gri - başlık vurgusu */
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
+    header {
+      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      color: white;
+      padding: 3rem 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(176, 138, 126, 0.3);
+    }
 
-h2 {
-  font-size: 1.25rem;
-  color: #9A8C98; /* Yumuşak lila - alt başlık */
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 0.5rem;
+    }
 
-p {
-  margin-bottom: 1.2rem;
-  line-height: 1.7;
-  color: #3E3E3E;
-}
+    header h1::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: white;
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+      opacity: 0.8;
+    }
 
-ul {
-  list-style: none;
-  padding-left: 0;
-}
+    header h2 {
+      margin-top: 0.5rem;
+      font-weight: 400;
+      font-size: 1.3rem;
+      opacity: 0.9;
+      letter-spacing: 0.04em;
+    }
 
-ul li::before {
-  content: "• ";
-  color: #C9ADA7; /* Gül kurusu tonu - liste işareti */
-  font-weight: bold;
-}
+    main.container {
+      max-width: 900px;
+      margin: 3rem auto 5rem;
+      padding: 0 1.5rem;
+      background-color: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(176, 138, 126, 0.15);
+    }
 
-.emoji-list li {
-  margin-bottom: 0.6rem;
-}
+    section {
+      margin-bottom: 2.8rem;
+    }
 
-strong {
-  color: #22223B;
-  font-weight: 600;
-}
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
 
-.button-container {
-  margin-top: 3rem;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
+    ul li::before {
+      content: "• ";
+      color: var(--primary-end);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-right: 6px;
+    }
 
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  text-decoration: none;
-  background-color: #C9ADA7; /* Gül kurusu tonu */
-  color: #fff;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  font-weight: 600;
-}
+    .emoji-list li {
+      margin-bottom: 0.7rem;
+      font-size: 1.05rem;
+    }
 
-.btn:hover {
-  background-color: #B08984; /* Hover için biraz koyusu */
-}
+    strong {
+      color: var(--text-dark);
+      font-weight: 700;
+    }
 
-.btn-secondary {
-  background-color: #9A8C98; /* Lila gri tonu */
-}
+    .button-container {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.4rem;
+    }
 
-.btn-secondary:hover {
-  background-color: #7F7079;
-}
+    .btn {
+      padding: 0.85rem 2.5rem;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(45deg, var(--primary-start), var(--primary-end));
+      box-shadow: 0 4px 12px rgba(176, 138, 126, 0.4);
+      transition: all 0.3s ease;
+      display: inline-block;
+      user-select: none;
+    }
 
+    .btn:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 18px rgba(176, 138, 126, 0.6);
+      transform: translateY(-3px);
+    }
 
+    .btn-secondary {
+      background: var(--secondary);
+      box-shadow: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: #7f7079;
+      box-shadow: 0 6px 12px rgba(127, 112, 121, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+
+    footer {
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 3rem 1.5rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      border-top: 3px solid var(--primary-end);
+      user-select: none;
+    }
+
+    .footer-section {
+      flex: 1 1 220px;
+      min-width: 200px;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      color: white;
+      position: relative;
+      padding-bottom: 0.3rem;
+    }
+
+    .footer-section h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--primary-end);
+      border-radius: 2px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: color 0.25s ease;
+    }
+
+    .footer-section ul li:hover {
+      color: var(--footer-link-hover);
+    }
+
+    /* Sosyal ikonlar için */
+
+    .social-icons {
+      display: flex;
+      gap: 15px;
+      margin-top: 0.8rem;
+    }
+
+    .social-icons a {
+      color: var(--footer-text);
+      font-size: 1.3rem;
+      transition: color 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-icons a:hover {
+      color: var(--footer-link-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Basit SVG ikonlar */
+    .social-icons svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #999;
+      user-select: none;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+
+      main.container {
+        margin: 2rem auto 4rem;
+        padding: 1rem 1.5rem;
+      }
+
+      .button-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .footer-section {
+        min-width: auto;
+        flex-basis: 100%;
+      }
+
+      .footer-section h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
   </style>
 </head>
 <body>
-  <class="container">
+
+  <header>
     <h1>Kelimelik’e Hoş Geldin! ✨</h1>
     <h2>Tek bir site, yüzlerce konu, binlerce kelime…</h2>
+  </header>
 
-    <p><strong>Kelimelik</strong>; çok sesli bir blog platformudur.</p>
+  <main class="container">
 
-    <p>Burada:</p>
-    <ul class="emoji-list">
-      <li>📝 Derin düşüncelerini yazabilir,</li>
-      <li>🌍 Dünya gündemini yorumlayabilir,</li>
-      <li>💡 Fikirlerini özgürce paylaşabilir,</li>
-      <li>🎨 İlham veren hikâyeleri okuyabilir,</li>
-      <li>🚀 Merak ettiklerini keşfedebilir,</li>
-      <li>🎬 Film-dizi önerilerinden kitap analizlerine kadar birçok konuda yazılar bulabilirsin.</li>
-    </ul>
+    <section>
+      <p><strong>Kelimelik</strong>; çok sesli bir blog platformudur.</p>
 
-    <p><strong>Kelimelik</strong>; belirli bir alana sıkışmayan, her türlü bilgiye, deneyime ve duyguya alan açan bir yer.</p>
+      <p>Burada:</p>
+      <ul class="emoji-list">
+        <li>📝 Derin düşüncelerini yazabilir,</li>
+        <li>🌍 Dünya gündemini yorumlayabilir,</li>
+        <li>💡 Fikirlerini özgürce paylaşabilir,</li>
+        <li>🎨 İlham veren hikâyeleri okuyabilir,</li>
+        <li>🚀 Merak ettiklerini keşfedebilir,</li>
+        <li>🎬 Film-dizi önerilerinden kitap analizlerine kadar birçok konuda yazılar bulabilirsin.</li>
+      </ul>
 
-    <p><strong>Burada tek sınır: kelimelerin gücü.</strong></p>
+      <p><strong>Kelimelik</strong>; belirli bir alana sıkışmayan, her türlü bilgiye, deneyime ve duyguya alan açan bir yer.</p>
 
-    <p><strong>Sen de ister oku, ister yaz. Çünkü bu dünya senin kelimelerinle daha da zengin.</strong></p>
+      <p><strong>Burada tek sınır: kelimelerin gücü.</strong></p>
+
+      <p><strong>Sen de ister oku, ister yaz. Çünkü bu dünya senin kelimelerinle daha da zengin.</strong></p>
+    </section>
 
     <div class="button-container">
-        <a href="/register" class="btn">Kayıt Ol</a>
-        <a href="/login" class="btn btn-secondary">Giriş Yap</a>
+      <a href="/register" class="btn">Kayıt Ol</a>
+      <a href="/login" class="btn btn-secondary">Giriş Yap</a>
     </div>
-  
-      <footer style="text-align: center; padding: 1rem; background-color: #C9ADA7; color: #fff;">
-    <p>&copy; 2025 Kelimelik. Tüm hakları saklıdır.</p>
+
+  </main>
+
+  <footer>
+    <div class="footer-section">
+      <h4>Hakkımızda</h4>
+      <ul>
+        <li>Hakkımızda</li>
+        <li>İletişim</li>
+        <li>Yardım Merkezi</li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Hizmetler</h4>
+      <ul>
+        <li>Blog Yazarlığı</li>
+        <li>Reklam</li>
+        <li>İşbirlikleri</li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Bizi Takip Et</h4>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 5 3.66 9.13 8.44 9.88v-6.99H7.9v-2.89h2.54v-2.21c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.25 0-1.64.78-1.64 1.58v1.86h2.79l-.45 2.89h-2.34v6.99C18.34 21.13 22 17 22 12z"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 3a10.9 10.9 0 0 1-3.14.86 5.48 5.48 0 0 0 2.4-3.02 10.92 10.92 0 0 1-3.48 1.33 5.46 5.46 0 0 0-9.3 4.97A15.5 15.5 0 0 1 1.64 2.16a5.46 5.46 0 0 0 1.69 7.29 5.4 5.4 0 0 1-2.48-.69v.07a5.46 5.46 0 0 0 4.38 5.35 5.48 5.48 0 0 1-2.47.09 5.47 5.47 0 0 0 5.1 3.8 10.95 10.95 0 0 1-6.78 2.34A11.03 11.03 0 0 1 1 19.54a15.47 15.47 0 0 0 8.39 2.46c10.07 0 15.58-8.34 15.58-15.57 0-.24-.01-.48-.02-.72A11.15 11.15 0 0 0 23 3z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm8.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h4>Adres</h4>
+      <p>İstanbul, Türkiye</p>
+      <p>+90 555 123 45 67</p>
+      <p>info@kelimelik.com</p>
+    </div>
+
+    <div class="footer-bottom">
+      &copy; 2025 Kelimelik. Tüm hakları saklıdır.
+    </div>
   </footer>
 
 </body>
