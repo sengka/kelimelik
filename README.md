@@ -23,8 +23,7 @@ Whether you're a casual blogger or a professional content creator, Kelimelik pro
 ### ✏️ Creating a Post
 - Log in to the admin panel.
 - Navigate to the **"New Post"** section.
-- Write your content using **Markdown**.
-
+- 
 ### 🚀 Publishing
 - Save drafts or publish posts instantly to make them live.
 
